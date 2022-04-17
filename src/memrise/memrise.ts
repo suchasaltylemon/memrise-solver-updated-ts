@@ -32,8 +32,8 @@ export class Memrise {
     await this._session.get(Url.HOME); // Load cookies
   }
 
-  public async solve(course: ICourse, points: number) {
+  public async solve(course: ICourse, points: number, timeToSpend: number) {
     await this._update_csrf();
-    await this._solver.solve(course, points);
+    await this._solver.solve(course, points, timeToSpend * 60_000);
   }
 }

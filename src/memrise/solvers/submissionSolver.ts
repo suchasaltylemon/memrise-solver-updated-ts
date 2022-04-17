@@ -83,12 +83,12 @@ export class SubmissionSolver extends SessionContainer implements ISolver {
     progressInfo: ProgressInfo,
     learnableInfo: LearnableInfo,
     sourceInfo: SourceInfo,
-    points: number
+    points: number,
+    timeSpent: number
   ): Event {
     const createdDate = Date.parse(progressInfo.created_date) / 10000;
     const lastDate = Date.parse(progressInfo.last_date) / 1000;
     const nextDate = Date.parse(progressInfo.next_date) / 1000;
-    const timeSpent = Math.floor(20_000 + Math.random() * 20_000); // Pseudorandom time
 
     return {
       attempts: progressInfo.attempts,
@@ -113,13 +113,13 @@ export class SubmissionSolver extends SessionContainer implements ISolver {
       score: 1,
       starred: false,
       test_id: randomUUID(),
-      time_spent: timeSpent,
+      time_spent: Math.floor(timeSpent),
       total_streak: progressInfo.attempts,
       when: lastDate,
     };
   }
 
-  public async solve(course: ICourse, totalPoints: number) {
+  public async solve(course: ICourse, totalPoints: number, timeSpent: number) {
     const events: Event[] = [];
 
     const session_info = await this._session.get(course.url);
@@ -144,7 +144,13 @@ export class SubmissionSolver extends SessionContainer implements ISolver {
       cumPoints += points;
 
       if (points > 0) {
-        const learnableEvent = this._generate_event(learnableProgress, learnable, sourceInfo, points);
+        const learnableEvent = this._generate_event(
+          learnableProgress,
+          learnable,
+          sourceInfo,
+          points,
+          timeSpent / learnables.length
+        );
         events.push(learnableEvent);
       }
     });
