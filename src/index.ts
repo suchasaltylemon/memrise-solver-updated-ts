@@ -1,5 +1,5 @@
 import { Memrise } from "./memrise/memrise";
-import { password, username } from "./alt.json";
+import { password, username } from "./auth.json";
 import { ICourse } from "./memrise/courses";
 import inquirer from "inquirer";
 import assert from "assert";
